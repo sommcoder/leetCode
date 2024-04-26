@@ -9,7 +9,7 @@ function morrisTraversal(root) {
   let output = []; // to store the traversal result
 
   // current gets reassigned to the new node
-  // Function also keeps tracker and reassigns a predecessor through outthe function
+  // Function also keeps tracker and reassigns a predecessor through out the function
   while (current != null) {
     if (current.left === null) {
       output.push(current.val); // visit the node

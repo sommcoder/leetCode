@@ -8,7 +8,7 @@ function narcissistic(value) {
       .split("")
       .map((el) => {
         console.log("el:", el);
-        console.log("el ^ pow:", +el ^ pow);
+        console.log("el ^ pow:", el ^ pow);
         return el ^ pow;
       })
       .join("") == value
