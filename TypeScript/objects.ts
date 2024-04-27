@@ -28,12 +28,12 @@ type myBool = true | false;
 // Generics provide VARIABLES to types
 
 // Without generics, we would either have to give the identity function a specific type:
-function identity(arg: number): number {
+function identity2(arg: number): number {
   return arg;
 }
 
 // Or, we could describe the identity function using the any type:
-function identity(arg: any): any {
+function identity3(arg: any): any {
   return arg;
 }
 
@@ -49,9 +49,32 @@ function identity1<Type>(arg: Type): Type {
   return arg;
 }
 
+// With this, we've now added a TYPE VARIABLE.
+// This type allows us to capture the type the user provides (eg. number) so that we can use that information later.
+// We say that this type is "generic" as it works over a RANGE of types.
+
 type StringArray = Array<string>;
 
 interface Backpack<Type> {
   add: (obj: Type) => void;
   get: () => Type;
 }
+
+// if we intend our GENERIC to work on arrays of Type, we'd need to specify that in the parameter definition.
+function loggingIdentity<Type>(arg: Type[]): Type[] {
+  console.log(arg.length);
+  return arg;
+}
+
+// ! Generic Classes
+// class GenericNumber<NumType> {
+//   zeroValue: NumType;
+//   add: (x: NumType, y: NumType) => NumType;
+
+// }
+
+let myGenericNumber = new GenericNumber<number>();
+myGenericNumber.zeroValue = 0;
+myGenericNumber.add = function (x, y) {
+  return x + y;
+};
