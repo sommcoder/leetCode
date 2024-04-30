@@ -7,7 +7,7 @@
 - balanced trees
 
 It's often easiest to use RECURSION because
-a TREE is a RECURSIVE DATA STRUCTURE...
+a TREE is a REC DATA STRUCTURE...
 
 ie. each NODE typically has two sub-trees!
 
@@ -38,7 +38,7 @@ class Tree {
   constructor() {
     this.root = null;
   }
-  insert() {
+  insert(value) {
     const newNode = new Node(value);
     if (this.root === null) {
       // if no root, assign to root
@@ -63,32 +63,102 @@ class Tree {
       }
     }
   }
+  // preorder, inorder, postorder
+  getJSON(order = "inorder", result = []) {
+    let root = this.root;
+    function DFS(node) {
+      // base case:
+      if (!node) return null;
+
+      if (order === "inorder") {
+        DFS(node.left); // traverse left
+        result.push(node); // read
+        DFS(node.right); //traverse right
+      } else if (order === "preorder") {
+        result.push(node); // read
+        DFS(node.left); // traverse left
+        DFS(node.right); //traverse right
+      } else {
+        DFS(node.left); // traverse left
+        DFS(node.right); //traverse right
+        result.push(node); // read
+      }
+    }
+    DFS(root);
+
+    return JSON.stringify(result);
+  }
   findNode(value) {
     return this.searchNode(this.root, value);
   }
   // DFS variations:
-  preorderTraversal(node = this.root, result = []) {
-    if (!node) {
-      result.push(node.value);
-      this.preorderTraversal(node.left, result);
-      this.preorderTraversal(node.right, result);
+  preorderTraversalRec(root = this.root, result = []) {
+    function traverse(node) {
+      // base case: no more nodes!
+      if (!node) return;
+
+      result.push(node.value); // Visit the node
+      traverse(node.left); // Traverse left subtree
+      traverse(node.right); // Traverse right subtree
     }
+
+    traverse(root);
     return result;
   }
-  inorderTraversal(node = this.root, result = []) {
-    if (!node) {
-      this.inorderTraversal(node.left, result);
-      result.push(node.value);
-      this.inorderTraversal(node.right, result);
+  preorderTraversalIter(root = this.root, result = []) {
+    if (!root) return [];
+
+    const stack = [root];
+
+    while (stack.length) {
+      const node = stack.pop();
+      result.push(node.val);
+      // right FIRST
+      if (node.right) stack.push(node.right);
+      // we need to access the left node 1st cause we're using pop!
+      if (node.left) stack.push(node.left);
     }
+
+    return result; // reverse the output array with built-in function
+  }
+  inorderTraversalRec(root = this.root, result = []) {
+    function traverse(node) {
+      // base case: no more nodes!
+      if (!node) return;
+
+      traverse(node.left); // Traverse left subtree
+      result.push(node.value); // Visit the node
+      traverse(node.right); // Traverse right subtree
+    }
+
+    traverse(root);
     return result;
   }
-  postorderTraversal(node = this.root, result = []) {
-    if (!node) {
-      this.postorderTraversal(node.left, result);
-      this.postorderTraversal(node.right, result);
-      result.push(node.value);
+  postorderTraversalIter(root = this.root, output = []) {
+    if (!root) return [];
+
+    const stack = [root];
+
+    while (stack.length) {
+      const node = stack.pop();
+      output.push(node.val);
+      if (node.left) stack.push(node.left);
+      if (node.right) stack.push(node.right);
     }
+
+    return output.reverse(); // reverse the output array with built-in function
+  }
+  postorderTraversalRec(root = this.root, result = []) {
+    function traverse(node) {
+      // base case: no more nodes!
+      if (!node) return;
+
+      traverse(node.left); // Traverse left subtree
+      traverse(node.right); // Traverse right subtree
+      result.push(node.value); // Visit the node
+    }
+
+    traverse(root);
     return result;
   }
   // BFS variations:
@@ -115,7 +185,7 @@ class Tree {
   lowestCommonAncestor(node1, node2) {}
 }
 
-let tree = new Tree();
+export let tree = new Tree();
 
 //       2
 //     /   \
@@ -148,10 +218,10 @@ function BFS(root) {
 }
 BFS(rootNode);
 
-// Recursive DFS Method:
+// Rec DFS Method:
 function DFSRec(node) {
   if (!node) return;
-  console.log("DFS recursive:", node.val);
+  console.log("DFS rec:", node.val);
   DFSRec(node.left);
   DFSRec(node.right);
 }
