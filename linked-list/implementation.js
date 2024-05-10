@@ -1,20 +1,21 @@
 // define the ListNode class:
 // this is a singly linked list:
 class ListNode {
-  constructor(data) {
-    this.data = data;
+  constructor(val) {
+    this.val = val;
     this.next = null;
   }
 }
 
-class SinglyLinkedList {
+export class SinglyLinkedList {
   constructor() {
     this.head = null;
     this.length = 0;
   }
+  seqArr = [];
   // add new node to the END of the list
-  append(data) {
-    const newNode = new ListNode(data);
+  append(val) {
+    const newNode = new ListNode(val);
     if (!this.head) {
       this.head = newNode;
     } else {
@@ -26,22 +27,34 @@ class SinglyLinkedList {
     }
     this.length++;
   }
+  traverseRec(head = this.head) {
+    if (!head) return this.seqArr;
+    this.seqArr.push(head.val);
+    traverseRec(head.next);
+  }
+  traverseIter(head = this.head) {
+    while (head) {
+      this.seqArr.push(head.val);
+      head = head.next; // will be undefined once it reaches the end of the list
+    }
+    return this.seqArr;
+  }
   // add new node to the START of the list
-  prepend(data) {
-    const newNode = new ListNode(data);
+  prepend(val) {
+    const newNode = new ListNode(val);
     newNode.next = this.head;
     this.head = newNode;
     this.length++;
   }
-  remove(data) {
+  remove(val) {
     let current = this.head;
-    if (current.data === data) {
+    if (current.val === val) {
       this.head = current.next;
       this.length--;
       return true;
     }
     while (current.next) {
-      if (current.next.data === data) {
+      if (current.next.val === val) {
         current.next = current.next.next;
         this.length--;
         return true;
@@ -50,13 +63,13 @@ class SinglyLinkedList {
     }
     return false;
   }
-  insert(index, data) {
+  insert(index, val) {
     // check index boundaries!
     if (index < 0 || index > this.length) {
       return false; // index out of bounds
     }
     // make new node
-    const newNode = new ListNode(data);
+    const newNode = new ListNode(val);
     // head check?
     if (index === 0) {
       // head swap
@@ -86,11 +99,18 @@ class SinglyLinkedList {
     this.length++;
     return true;
   }
+  reverse(head = this.head) {
+    let [prev, current] = [null, head];
+    while (current) {
+      [current.next, prev, current] = [prev, current, current.next];
+    }
+    return prev;
+  }
   printList() {
     let current = this.head;
     let result = [];
     while (current) {
-      result.push(current.data);
+      result.push(current.val);
       current = current.next; // re-assign current
     }
     console.log(result.join(" -> "));
@@ -119,8 +139,8 @@ class DoublyLinkedList {
     this.tail = null;
     this.length = 0;
   }
-  append(data) {
-    const newNode = new Node(data);
+  append(val) {
+    const newNode = new Node(val);
     if (!this.head) {
       this.head = newNode;
       this.tail = newNode;
@@ -132,8 +152,8 @@ class DoublyLinkedList {
     this.length++;
   }
 
-  prepend(data) {
-    const newNode = new Node(data);
+  prepend(val) {
+    const newNode = new Node(val);
     if (!this.head) {
       this.head = newNode;
       this.tail = newNode;
@@ -145,16 +165,16 @@ class DoublyLinkedList {
     this.length++;
   }
 
-  insert(index, data) {
+  insert(index, val) {
     if (index < 0 || index > this.length) {
       return false;
     }
-    const newNode = new Node(data);
+    const newNode = new Node(val);
     if (index === 0) {
-      this.prepend(data);
+      this.prepend(val);
       return true;
     } else if (index === this.length) {
-      this.append(data);
+      this.append(val);
       return true;
     } else {
       let current = this.head;
@@ -170,10 +190,10 @@ class DoublyLinkedList {
     }
   }
 
-  remove(data) {
+  remove(val) {
     let current = this.head;
     while (current) {
-      if (current.data === data) {
+      if (current.val === val) {
         if (current.prev) {
           current.prev.next = current.next;
         } else {
@@ -200,7 +220,7 @@ class DoublyLinkedList {
     let current = this.head;
     let result = [];
     while (current) {
-      result.push(current.data);
+      result.push(current.val);
       current = current.next;
     }
     console.log(result.join(" <-> "));
@@ -210,7 +230,7 @@ class DoublyLinkedList {
     let current = this.tail;
     let result = [];
     while (current) {
-      result.push(current.data);
+      result.push(current.val);
       current = current.prev;
     }
     console.log(result.join(" <-> "));
